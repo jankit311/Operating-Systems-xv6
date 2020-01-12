@@ -1,0 +1,28 @@
+The exec() function is used by the operating system:
+
+1.Initially
+
+Breakpoint 1, exec (path=0x20b01c "/init", argv=0x20cf14) at exec.c:11
+11	{
+(gdb) 
+
+At this point, the machine is running in 32-bit mode, the xv6 kernel has initialized itself, and it is just about to load and execute its first user-mode process, the /init program.
+
+2.At the second breakpoint
+
+Breakpoint 1, exec (path=0x2056c8 "sh", argv=0x207f14) at exec.c:11
+11	{
+(gdb) 
+
+The second time the exec function gets called is when the /init program launches the first interactive shell, sh.
+
+3.and why is no breakpoint reached the third time until we execute any of the commands in xv6 operating system
+
+This is because xv6 has started a shell, waiting for a command (we can see a '$' prompt in the qemu terminal), and it will not run to the exec function again until we enter a command, which the shell will call exec to run it.
+
+After we type command ls in qemu we can see the third breakpoint as the shell called exec() to execute the ls command.
+Breakpoint 1, exec (path=0x1f40e0 "ls", argv=0x201f14) at exec.c:11
+11	{
+(gdb)
+We can use the backtrace command to trace and list the chain of functions calls that led to the current function.
+We can go "up" one call frame to examine the context from which exec was called using the up command.
